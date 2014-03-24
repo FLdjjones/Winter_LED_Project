@@ -5,6 +5,10 @@
 #define bluePin      4 // this is the pin the blue pin is on 
 #define receive_pin  5 // this is the pin the reciever is on
 
+int val;
+ 
+char Sensor1CharMsg[4]; 
+
 
 void setup()
 {
@@ -21,12 +25,27 @@ void loop()
 {
   uint8_t buf[VW_MAX_MESSAGE_LEN];
   uint8_t buflen = VW_MAX_MESSAGE_LEN;
-  int val  ; 
 
-  if (vw_get_message(buf, &buflen)) // Non-blocking
-  {
-    int val;     //this is the stage of colors we are on 
-   // DigiUSB.println(val);
+      if (vw_get_message(buf, &buflen)) 
+    {
+    int i;
+        // Message with a good checksum received, dump it. 
+        for (i = 0; i < buflen; i++)
+    {            
+          // Fill Sensor1CharMsg Char array with corresponding 
+          // chars from buffer.   
+          Sensor1CharMsg[i] = char(buf[i]);
+    }
+        
+        // Null terminate the char array
+        // This needs to be done otherwise problems will occur
+        // when the incoming messages has less digits than the
+        // one before. 
+        Sensor1CharMsg[buflen] = '\0';
+        
+        // Convert Sensor1CharMsg Char array to integer
+        val = atoi(Sensor1CharMsg);
+        
     switch(val)    // 1st stage no color
     {
      case 0:
@@ -52,8 +71,8 @@ void loop()
       analogWrite(bluePin, 255);
       analogWrite(greenPin, 0);
                              // value resets so the loop starts over
+      
     }
-  //DigiUSB.delay(10);
   }
 }
 

@@ -10,7 +10,8 @@ void setup()
   pinMode(indicator, OUTPUT);  //Sets up the onboard led to be an indicator
   pinMode(button_pin, INPUT);   //Sets up the button for input
   vw_set_tx_pin(transmit_pin); //Sets up the output pin for VW
-  vw_setup(2000);    //starts vitualwire
+  vw_setup(2000);
+  Serial.begin(9600);    //starts vitualwire
 }
 
 void loop()
@@ -19,18 +20,21 @@ void loop()
 
   if (buttonState == HIGH)
   {
-    int i;
-    if (i < 3)
-    {
+
+    for(int i = 0; x < 5; x++)
       vw_send((uint8_t *)i,1);
       vw_wait_tx();
       analogWrite(indicator, HIGH);
       delay(500);
       analogWrite(indicator, LOW);
       i++;
+      Serial.println(i);
+
     }
      i = 0;
+
   }
+  
   
 
 
